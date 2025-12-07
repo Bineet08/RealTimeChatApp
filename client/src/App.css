@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Science+Gothic:wght@100..900&display=swap');
+
+*{
+    font-family: "Science Gothic", sans-serif;
+}
+
+::-webkit-scrollbar{
+    display:none;
+}
