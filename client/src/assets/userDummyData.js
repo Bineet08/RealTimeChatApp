@@ -88,3 +88,8 @@ export const userDummyMessages = [
         "read": false
     }
 ]
+
+export const imagesData = [
+    {},
+    {}
+]

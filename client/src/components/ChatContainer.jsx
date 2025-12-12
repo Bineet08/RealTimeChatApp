@@ -21,11 +21,11 @@ const ChatContainer = ({selectedUser, setSelectedUser}) => {
     })
   }
 
-  const scrollToEnd = useRef();
+  const scrollToEnd = useRef(null);
   useEffect(()=>{
     if(scrollToEnd.current){
-      /*scrollToEnd.current.scrollIntoView({ behavior:"smooth" })*/
-      scrollToEnd.current.scrollTop = scrollToEnd.current.scrollHeight;
+      scrollToEnd.current.scrollIntoView({ behavior:"smooth", block:"end"})
+     // scrollToEnd.current.scrollTop = scrollToEnd.current.scrollHeight;
     }
   },[]);
 
@@ -38,7 +38,7 @@ const ChatContainer = ({selectedUser, setSelectedUser}) => {
           Ankit
           <span className='w-2 h-2 rounded-full bg-green-500'></span>
         </p>
-        <img onClick={()=>setSelectedUser(null)} src="#" alt="" className='md:hidden max-w-7'/>
+        <img onClick={()=>setSelectedUser(null)} src="#" alt="info" className='md:hidden max-w-7'/>
         <img src="#" alt="info" className='max--md:hidden max-w-5' />
       </div>
 
@@ -55,9 +55,21 @@ const ChatContainer = ({selectedUser, setSelectedUser}) => {
             </div>
         </div>
       ))}
-      /* <div ref={scrollToEnd}></div> */
+       <div ref={scrollToEnd}></div> 
     </div>
 
+{/*----SEND AREA------*/ }
+    <div className='absolute bottom-0 left-0 right-0 flex items-center gap-3 p-3'>
+      <div className='flex-1 flex items-center bg-gray-100/12 px-3 rounded-full'>
+        <input type="text" placeholder='Enter the message...' className='flex-1 text-sm
+        border-none p-3 rounded-lg outline-none text-white placeholder-gray-400  '/>
+        <input type="file" id='image' accept='image/jpg, image/jpeg, image/png' hidden />
+        <label htmlFor="image">
+          <img src="#" alt="imgicon" className='w-5 mr-2 cursor-pointer'/>
+        </label>
+      </div>
+      <img src="#" alt="send" className='w-7 cursor-pointer' />
+    </div>
     </div>
   
 
