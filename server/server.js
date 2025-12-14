@@ -29,6 +29,7 @@ app.use("/api/auth", userRoutes);
 app.use("/api/messages", messageRoutes);
 
 server.listen(PORT, () => {
+    console.log("SERVER VERSION: 2.0 (Privacy Fixes Applied)");
     console.log("server is running on PORT:" + PORT);
     connectDB();
 });
