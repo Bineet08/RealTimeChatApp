@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { AuthContext } from '../../context/AuthContext.jsx'
 import toast from 'react-hot-toast'
+import { Search, MoreVertical, MessageSquare, LogOut, User } from 'lucide-react'
 
 const Sidebar = ({ selectedUser, setSelectedUser }) => {
   const navigate = useNavigate();
@@ -57,21 +58,28 @@ const Sidebar = ({ selectedUser, setSelectedUser }) => {
     ${selectedUser ? "max-md:hidden" : ''} `}>
       <div className='pb-5'>
         <div className='flex justify-between items-center'>
-          <img src='#' alt='logo' className='max-w-40'></img>
+          <div className='flex items-center gap-2 text-white font-bold text-lg'>
+            <MessageSquare className='w-8 h-8 text-violet-400 fill-violet-500/20' />
+            <span className='max-lg:hidden'>Chit Chat</span>
+          </div>
           <div className='relative py-2 group'>
-            <img src="#" alt='Menu' className='max-h-5 cursor-pointer' />
-            <div className='absolute top-full right-0 z-20 w-32 p-5 rounded-md 
-            border border-gray-500 text-gray-100 hidden group-hover:block bg-[#282142]'>
+            <MoreVertical className='w-6 h-6 text-gray-300 cursor-pointer hover:text-white transition-colors' />
+            <div className='absolute top-full right-0 z-20 w-40 p-2 rounded-xl 
+            border border-gray-700 shadow-xl text-gray-100 hidden group-hover:block bg-[#282142]'>
               <p onClick={() => navigate('/profile')}
-                className='cursor-pointer text-sm'>Edit Profile</p>
-              <hr className='my-2 border-t border-gray-500'></hr>
-              <p onClick={logout} className='cursor-pointer text-sm'>Logout</p>
+                className='cursor-pointer text-sm p-3 hover:bg-white/10 rounded-lg flex items-center gap-2 transition-colors'>
+                <User className='w-4 h-4' /> Edit Profile
+              </p>
+              <div className='h-[1px] bg-gray-700 my-1'></div>
+              <p onClick={logout} className='cursor-pointer text-sm p-3 hover:bg-red-500/10 text-red-400 rounded-lg flex items-center gap-2 transition-colors'>
+                <LogOut className='w-4 h-4' /> Logout
+              </p>
             </div>
           </div>
         </div>
 
-        <div className='bg-[#282142] rounded-full flex items-center gap-2 py-2 px-4 mt-5 '>
-          <img src="#" alt="search" className='w-3' />
+        <div className='bg-[#282142] rounded-xl flex items-center gap-2 py-3 px-4 mt-5 border border-transparent focus-within:border-violet-500/50 transition-colors'>
+          <Search className='w-5 h-5 text-gray-400' />
           <input
             type="text"
             value={searchTerm}
@@ -104,7 +112,7 @@ const Sidebar = ({ selectedUser, setSelectedUser }) => {
                   hover:bg-[#282142]/30 transition-colors`}
               >
                 <img
-                  src={user?.profilePic || '#'}
+                  src={user?.profilePic || '/avatar.png'}
                   alt=""
                   className='w-[35px] h-[35px] aspect-square rounded-full object-cover'
                 />

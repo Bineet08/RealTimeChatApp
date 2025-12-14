@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useContext } from 'react'
 import { AuthContext } from '../../context/AuthContext.jsx'
 import toast from 'react-hot-toast'
+import { X, Info, Image, Send, MessageSquare } from 'lucide-react'
 
 const ChatContainer = ({ selectedUser, setSelectedUser }) => {
   const { authUser, axios, socket, onlineUsers } = useContext(AuthContext);
@@ -130,7 +131,7 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
       {/* Header */}
       <div className='flex items-center gap-3 py-3 mx-4 border-b border-stone-500'>
         <img
-          src={selectedUser?.profilePic || '#'}
+          src={selectedUser?.profilePic || '/avatar.png'}
           alt="UserIcon"
           className='w-8 h-8 rounded-full object-cover'
         />
@@ -138,13 +139,11 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
           {selectedUser?.fullName}
           <span className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-500' : 'bg-gray-500'}`}></span>
         </p>
-        <img
+        <X
           onClick={() => setSelectedUser(null)}
-          src="#"
-          alt="close"
-          className='md:hidden max-w-7 cursor-pointer'
+          className='md:hidden cursor-pointer w-7 h-7 text-gray-300'
         />
-        <img src="#" alt="info" className='max-md:hidden max-w-5' />
+        <Info className='max-md:hidden w-5 h-5 text-gray-300 cursor-pointer' />
       </div>
 
       {/* Messages Area */}
@@ -154,7 +153,10 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
             <p className='text-gray-400'>Loading messages...</p>
           </div>
         ) : messages.length === 0 ? (
-          <div className='flex items-center justify-center h-full'>
+          <div className='flex items-center justify-center h-full gap-4 text-center'>
+            <div className='bg-violet-500/20 p-4 rounded-full'>
+              <MessageSquare className='w-8 h-8 text-violet-400' />
+            </div>
             <p className='text-gray-400'>No messages yet. Start a conversation!</p>
           </div>
         ) : (
@@ -187,7 +189,7 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
                 onClick={() => setExpandedMsgId(expandedMsgId === msg._id ? null : msg._id)}
               >
                 <img
-                  src={msg.senderId !== authUser?._id ? selectedUser?.profilePic : authUser?.profilePic || '#'}
+                  src={msg.senderId !== authUser?._id ? (selectedUser?.profilePic || '/avatar.png') : (authUser?.profilePic || '/avatar.png')}
                   alt="user"
                   className='w-7 h-7 rounded-full object-cover'
                 />
@@ -240,17 +242,19 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
             onChange={handleImageSelect}
           />
           <label htmlFor="image">
-            <img src="#" alt="imgicon" className='w-5 mr-2 cursor-pointer' />
+            <Image className='w-5 h-5 mr-2 cursor-pointer text-gray-400 hover:text-white transition-colors' />
           </label>
         </div>
-        <button type="submit">
-          <img src="#" alt="send" className='w-7 cursor-pointer' />
+        <button type="submit" disabled={!messageText.trim() && !selectedImage}>
+          <Send className={`w-6 h-6 ${!messageText.trim() && !selectedImage ? 'text-gray-500' : 'text-violet-400 hover:text-violet-300'} transition-colors cursor-pointer`} />
         </button>
       </form>
     </div>
   ) : (
-    <div className='flex flex-col items-center justify-center gap-2 text-gray-500 bg-white/10 max-md:hidden h-full'>
-      <img src="#" alt="logo" className='max-w-16' />
+    <div className='flex flex-col items-center justify-center gap-5 text-gray-500 bg-white/10 max-md:hidden h-full'>
+      <div className='bg-violet-500/20 p-6 rounded-full animate-bounce'>
+        <MessageSquare className='w-16 h-16 text-violet-400' />
+      </div>
       <p className='text-lg font-medium text-white'>Chit Chat</p>
       <p className='text-sm text-gray-400'>Select a user to start chatting</p>
     </div>
