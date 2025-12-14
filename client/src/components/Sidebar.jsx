@@ -22,8 +22,9 @@ const Sidebar = ({ selectedUser, setSelectedUser }) => {
     const fetchUsers = async () => {
       setIsLoading(true);
       try {
-        const url = searchTerm ? `/api/messages/users?search=${searchTerm}` : '/api/messages/users';
-        const { data } = await axios.get(url);
+        const { data } = await axios.get('/api/messages/users', {
+          params: searchTerm ? { search: searchTerm } : {}
+        });
         if (data.success) {
           setUsers(data.users);
           setUnseenMessages(data.unseenMessages || {});

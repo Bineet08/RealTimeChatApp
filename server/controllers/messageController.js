@@ -8,21 +8,26 @@ export const getUsersForSidebar = async (req, res) => {
         const userId = req.user._id;
         const { search } = req.query;
 
+        console.log(`🔎 Sidebar Fetch: User ${userId} | Search: '${search}'`);
+
         let filteredUsers = [];
 
         if (search) {
+            console.log("-> Searching for users...");
             // If searching, find any user matching the name (excluding self)
             filteredUsers = await User.find({
                 _id: { $ne: userId },
                 fullName: { $regex: search, $options: "i" }
             }).select("-password");
         } else {
+            console.log("-> Fetching recent chats only...");
             // Default: Only find users we have chatted with
             const sentMessages = await Message.distinct("receiverId", { senderId: userId });
             const receivedMessages = await Message.distinct("senderId", { receiverId: userId });
 
             // Combine and unique IDs
             const contactIds = [...new Set([...sentMessages.map(id => id.toString()), ...receivedMessages.map(id => id.toString())])];
+            console.log(`-> Found ${contactIds.length} contacts.`);
 
             filteredUsers = await User.find({
                 _id: { $in: contactIds, $ne: userId }

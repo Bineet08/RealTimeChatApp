@@ -21,11 +21,9 @@ const App = () => {
     <div className="bg-[url('./assets/bg.jpg')] bg-cover bg-center min-h-screen">
       <Toaster />
       <Routes>
-      <Route path='/' element={authUser ? <HomePage /> : <Navigate to='/login' />} />
+        <Route path='/' element={authUser ? <HomePage /> : <Navigate to='/login' />} />
         <Route path='/login' element={!authUser ? <LoginPage /> : <Navigate to='/' />} />
         <Route path='/profile' element={authUser ? <ProfilePage /> : <Navigate to='/login' />} />
-
-        
       </Routes>
     </div>
   )
