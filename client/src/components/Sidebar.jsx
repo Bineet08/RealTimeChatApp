@@ -17,16 +17,17 @@ const Sidebar = ({ selectedUser, setSelectedUser }) => {
     console.log('🟢 Online Users:', onlineUsers);
   }, [onlineUsers]);
 
-  // Fetch users on mount
+  // Fetch users with search/debounce
   useEffect(() => {
     const fetchUsers = async () => {
+      setIsLoading(true);
       try {
-        const { data } = await axios.get('/api/messages/users');
+        const url = searchTerm ? `/api/messages/users?search=${searchTerm}` : '/api/messages/users';
+        const { data } = await axios.get(url);
         if (data.success) {
           setUsers(data.users);
           setUnseenMessages(data.unseenMessages || {});
           setLastMessageTime(data.lastMessageTime || {});
-          console.log('👥 Fetched Users:', data.users.map(u => u.fullName));
         }
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -36,17 +37,19 @@ const Sidebar = ({ selectedUser, setSelectedUser }) => {
       }
     };
 
-    fetchUsers();
-  }, [axios]);
+    const timeoutId = setTimeout(() => {
+      fetchUsers();
+    }, 500);
 
-  // Filter and sort users - most recent conversation first
-  const sortedUsers = users
-    .filter(user => user.fullName.toLowerCase().includes(searchTerm.toLowerCase()))
-    .sort((a, b) => {
-      const timeA = lastMessageTime[a._id] ? new Date(lastMessageTime[a._id]).getTime() : 0;
-      const timeB = lastMessageTime[b._id] ? new Date(lastMessageTime[b._id]).getTime() : 0;
-      return timeB - timeA; // Most recent first
-    });
+    return () => clearTimeout(timeoutId);
+  }, [axios, searchTerm]);
+
+  // Sort users - most recent conversation first (no filtering here, server does it)
+  const sortedUsers = [...users].sort((a, b) => {
+    const timeA = lastMessageTime[a._id] ? new Date(lastMessageTime[a._id]).getTime() : 0;
+    const timeB = lastMessageTime[b._id] ? new Date(lastMessageTime[b._id]).getTime() : 0;
+    return timeB - timeA; // Most recent first
+  });
 
   return (
     <div className={`bg-[#8185B2]/10 h-full p-5 rounded-r-xl overflow-y-scroll text-white

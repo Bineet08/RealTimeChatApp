@@ -6,7 +6,28 @@ import { getReceiverSocketId, io } from "../lib/socket.js";
 export const getUsersForSidebar = async (req, res) => {
     try {
         const userId = req.user._id;
-        const filteredUsers = await User.find({ _id: { $ne: userId } }).select("-password");
+        const { search } = req.query;
+
+        let filteredUsers = [];
+
+        if (search) {
+            // If searching, find any user matching the name (excluding self)
+            filteredUsers = await User.find({
+                _id: { $ne: userId },
+                fullName: { $regex: search, $options: "i" }
+            }).select("-password");
+        } else {
+            // Default: Only find users we have chatted with
+            const sentMessages = await Message.distinct("receiverId", { senderId: userId });
+            const receivedMessages = await Message.distinct("senderId", { receiverId: userId });
+
+            // Combine and unique IDs
+            const contactIds = [...new Set([...sentMessages.map(id => id.toString()), ...receivedMessages.map(id => id.toString())])];
+
+            filteredUsers = await User.find({
+                _id: { $in: contactIds, $ne: userId }
+            }).select("-password");
+        }
 
         const unseenMessages = {};
         const lastMessageTime = {};
